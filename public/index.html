@@ -5,45 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat APP</title>
 </head>
+
 <body>
     <h1>Chatting</h1>
 
-    <input type="text" id="message" placeholder="Enter Message"/>
+    <input type="text" id="message" placeholder="Enter Message" />
     <button id="sendBtn">Send</button>
 
     <div id="messages"></div>
 
 
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io(); //connects to the server using WebSocket.
-        const sendBtn = document.getElementById("sendBtn");
-        const messageInput = document.getElementById("message");
-        const allMessages = document.getElementById('messages');
-        
-        //Promt user for nickaname
-        let nickname = prompt("Enter your nickname:");
-        socket.emit('set-nickname', nickname);
-
-
-
-        //Receiving Messages from Server
-        socket.on("message", (message) =>{
-            const p = document.createElement('p');
-            p.innerText = message;
-            allMessages.appendChild(p);
-        });
-        
-        //Sending Messages to Server
-        sendBtn.addEventListener('click', e => {
-            const message = messageInput.value;
-            console.log(message);
-
-            socket.emit("user-message", message);
-            messageInput.value = '';
-        })
-        
-
-    </script>
+    <script src="/js/main.js"></script>
 </body>
+
 </html>
