@@ -12,6 +12,12 @@ const users = {};
 const activeNicknames = new Set();
 // Socket.io Setup
 
+const broadcastUserList = () => {
+    const nicknames = Object.values(users);
+    io.emit('users-list', {nicknames, count: nicknames.length});
+};
+
+
 io.on('connection', (socket) => {
     console.log("A user Connected:", socket.id);
 
@@ -31,7 +37,7 @@ io.on('connection', (socket) => {
             return;
         }
 
-        if (activeNicknames.has(nickname)) {
+        if (activeNicknames.has(nickname) || nickname == "Server" ||  nickname == "server") {
             socket.emit('nickname-status', { success: false, reason: 'Nickname already taken.' });
             return;
         }
@@ -40,20 +46,40 @@ io.on('connection', (socket) => {
         activeNicknames.add(nickname);
 
         socket.emit('nickname-status', { success: true, nickname });
-        socket.broadcast.emit('message', `${nickname} joined the chat`);
+        socket.broadcast.emit('message',
+            {
+                nickname :"Server",
+                message: `${nickname} joined the chat`,
+                time: new Date().toLocaleTimeString([],{hour:"2-digit", minute:"2-digit"})
+            }
+        );
+        // Send updated list
+        broadcastUserList();
     });
+
+    
+
     // Handle chat messages
     socket.on('user-message', message => {
         const nickname = users[socket.id] || 'Anonymous';
-        io.emit('message', `${nickname}: ${message}`);
+
+        const time = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+        io.emit('message', {nickname, message,time});
     });
 
     // Handle disconnect
     socket.on('disconnect', () => {
         const nickname = users[socket.id] || 'Someone';
-        socket.broadcast.emit('message', `${nickname} left the chat`);
+        socket.broadcast.emit('message',
+            {
+                nickname:"Server",
+                message: `${nickname} left the chat`,
+                time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+            }); 
         activeNicknames.delete(nickname);
         delete users[socket.id];
+        // Send updated list
+        broadcastUserList();
     })
 });
 

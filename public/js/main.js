@@ -3,6 +3,7 @@ window.addEventListener('load', () => {
             const sendBtn = document.getElementById("sendBtn");
             const messageInput = document.getElementById("message");
             const allMessages = document.getElementById('messages');
+            const userList = document.getElementById('userList');
 
 
             function askNickname() {
@@ -10,6 +11,13 @@ window.addEventListener('load', () => {
                 if (!nickname || nickname.trim() === "") nickname = "Anonymous";
                 socket.emit('check-nickname', nickname);
             }
+
+            //Receive updated list from user
+            socket.on('users-list', (data)=>{
+                userList.innerHTML="";
+                const { nicknames, count } = data;
+                userList.innerText = `${count} online : ${nicknames.join(', ')}`;
+            });
 
             // Handle nickname validation response
             socket.on('nickname-status', data => {
@@ -24,19 +32,32 @@ window.addEventListener('load', () => {
 
 
             //Receiving Messages from Server
-            socket.on("message", (message) => {
+            socket.on("message", ({nickname, message, time}) => {
                 const p = document.createElement('p');
-                p.innerText = message;
+                p.classList.add("message-line");
+                if (nickname === "Server") {
+                    p.innerHTML = `<span class="msg-text server-msg"><em>${message}</em></span><span class="msg-time">${time}</span>`;
+                } else {
+                p.innerHTML = `<span class="msg-text"><strong>${nickname}</strong>: ${message}</span><span class="msg-time">${time}</span>`;
+                }
                 allMessages.appendChild(p);
+                allMessages.scrollTop = allMessages.scrollHeight;
             });
 
             //Sending Messages to Server
             sendBtn.addEventListener('click', e => {
-                const message = messageInput.value;
+                const message = messageInput.value.trim();
                 console.log(message);
-
-                socket.emit("user-message", message);
-                messageInput.value = '';
+                if(message !=""){
+                    socket.emit("user-message", message);
+                    messageInput.value = '';
+                }
             })
+
+            //send msg by Enter key
+            messageInput.addEventListener("keypress", e => {   
+                if (e.key === "Enter") sendBtn.click();
+            });
+
         });
 

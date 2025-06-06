@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat APP</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
     <h1>Chatting</h1>
-
-    <input type="text" id="message" placeholder="Enter Message" />
-    <button id="sendBtn">Send</button>
-
-    <div id="messages"></div>
+    <!-- container -->
+    <div id="chat-container">
+        <div id="users">
+            <h3>Online Users:</h3>
+            <ul id="userList"></ul>
+        </div>           
+        <div id="messages"></div>
+        <input type="text" id="message" placeholder="Enter Message" />
+        <button id="sendBtn">Send</button>
+    </div>
 
 
     <script src="/socket.io/socket.io.js"></script>
