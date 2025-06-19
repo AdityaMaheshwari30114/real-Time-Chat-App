@@ -80,7 +80,21 @@ io.on('connection', (socket) => {
         delete users[socket.id];
         // Send updated list
         broadcastUserList();
-    })
+    });
+
+    //Handle file uploads
+    socket.on('file-upload',({nickname, fileType, fileName, fileData, time}) =>{
+        
+        //Broadcast the file to all users
+        io.emit('file-message',{
+            nickname: users[socket.id] || 'Anonymous',
+            fileType,
+            fileName,
+            fileData,
+            time
+        });
+
+    });
 });
 
 

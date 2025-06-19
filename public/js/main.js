@@ -5,6 +5,9 @@ window.addEventListener('load', () => {
             const allMessages = document.getElementById('messages');
             const userList = document.getElementById('userList');
 
+            const fileInput = document.getElementById("fileInput");
+
+
 
             function askNickname() {
                 let nickname = prompt("Enter your nickname (max 15 characters, no symbols):");
@@ -57,6 +60,74 @@ window.addEventListener('load', () => {
             //send msg by Enter key
             messageInput.addEventListener("keypress", e => {   
                 if (e.key === "Enter") sendBtn.click();
+            });
+
+            //Handle File Selection
+            fileInput.addEventListener('change', ()=>{
+                const file = fileInput.files[0];
+
+                if(!file) return;
+
+                const allowedTypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'application/pdf'];
+
+                if(!allowedTypes.includes(file.type)){
+                    alert("Only image and pdf files are allowed.");
+                    fileInput.value ="";
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const fileData = e.target.result;
+
+                    socket.emit('file-upload', {
+                        nickname : "Anonymous",
+                        fileType : file.type,
+                        fileName : file.name,
+                        fileData,  //base64 string
+                        time: new Date().toLocaleTimeString([],{hour:'2-digit', minute:'2-digit'}),
+                    });
+                    fileInput.value = '';
+                };
+                reader.readAsDataURL(file); // convert file to base64
+            });
+
+            // Handle and display incoming File messages
+            socket.on('file-message', ({nickname, fileType, fileName, fileData, time})=>{
+                const p = document.createElement('p');
+                p.classList.add('message-line');
+
+                const fileContent = document.createElement('span');
+                fileContent.classList.add('msg-text');
+
+                if(fileType.startsWith("image/")){
+                    const img = document.createElement('img');
+                    img.src = fileData;
+                    img.alt = fileName;
+                    img.style.maxWidth = "200px";
+                    img.style.display = "block";
+
+                    fileContent.innerHTML = `<strong>${nickname}</strong>:<br/>`;
+                    fileContent.appendChild(img);
+                }
+                else if(fileType === "application/pdf"){
+                    const link = document.createElement('a');
+                    
+                    link.href = fileData;
+                    link.target = "_blank";
+                    link.textContent = `📄 ${fileName}`;
+
+                    fileContent.innerHTML = `<strong>${nickname}</strong>:<br/>`
+                    fileContent.appendChild(link);
+                }
+
+                const timeSpan = document.createElement('span');
+                timeSpan.classList.add("msg-time");
+                timeSpan.innerText = time;
+
+                p.appendChild(fileContent);
+                p.appendChild(timeSpan);
+                allMessages.appendChild(p);
+                allMessages.scrollTop = allMessages.scrollHeight;
             });
 
         });

@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; 
     background-color: #727fb3;
     margin: 0;
     padding: 0;
@@ -100,3 +100,8 @@ h1 {
     font-style: italic;
     color: #555;
 }
+#messages img {
+    margin-top: 5px;
+    border-radius: 5px;
+}
+
