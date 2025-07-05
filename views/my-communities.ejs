@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Communities - GreenChat</title>
+</head>
+
+<body>
+    <h2>
+        <%= user.name %>'s Communities
+    </h2>
+
+    <ul>
+        <% myCommunities.forEach(c=> { %>
+            <li>
+                <%= c.name %>
+                    <a href="/community/<%= c._id %>/chat">Open Chat</a>
+            </li>
+            <% }) %>
+    </ul>
+
+    <br>
+    <a href="/">Back to Home</a>
+</body>
+
+</html>

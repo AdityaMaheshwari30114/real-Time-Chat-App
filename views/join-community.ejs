@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join a Community - GreenChat</title>
+</head>
+
+<body>
+    <h2>Hello, <%= user.name %>!</h2>
+    <h3>Join a Community</h3>
+
+    <ul>
+        <% communities.forEach(c=> { %>
+            <li>
+                <%= c.name %>
+                    <form action="/community/<%= c._id %>/join" method="get" style="display:inline;">
+                        <button type="submit">Join</button>
+                    </form>
+            </li>
+            <% }) %>
+    </ul>
+
+    <br>
+    <a href="/">Back to Home</a>
+
+</body>
+
+</html>

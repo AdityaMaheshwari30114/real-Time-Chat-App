@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GreenChat Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to GreenChat 🌿</h1>
+    <h3>Hello, <span id="username"></span></h3>
+
+    <button onclick="location.href='/community/create'">Create Community</button>
+    <button onclick="location.href='/community'">Join Community</button>
+
+    <script>
+    fetch("/user/me")
+        .then(res => res.json())
+        .then(data => {
+        document.getElementById("username").innerText = data.name || "User";
+        })
+        .catch(err => {
+        console.log("Error fetching user info", err);
+        });
+    </script>
+</body>
+</html>
