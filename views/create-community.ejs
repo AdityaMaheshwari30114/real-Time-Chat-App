@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Community - GreenChat</title>
+</head>
+
+<body>
+    <h2>Welcome, <%= user.name %>!</h2>
+    <h3>Create a New Community</h3>
+    <form action="/community/create" method="post">
+        <label>Community Name:</label>
+        <input type="text" name="name" required />
+        <button type="submit">Create</button>
+    </form>
+    <br>
+    <a href="/">Back to Home</a>
+</body>
+
+</html>

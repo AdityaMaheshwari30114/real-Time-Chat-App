@@ -1,0 +1,38 @@
+<!-- views/community-chat.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%= community.name %> | GreenChat
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <h2>Welcome, <%= user.name %> — Community: <%= community.name %>
+    </h2>
+
+    <div id="chat-container">
+        <div id="users">
+            <h3>Online Users:</h3>
+            <ul id="userList"></ul>
+        </div>
+        <div id="messages"></div>
+        <input type="text" id="message" placeholder="Type your message..." />
+        <button id="sendBtn">Send</button>
+        <input type="file" id="fileInput" accept="image/*,application/pdf" />
+    </div>
+
+    <script>
+        window.USER = { _id: "<%= user._id %>", name: "<%= user.name %>" };
+        window.ROOM_ID = "<%= community._id %>";
+
+    </script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/community-chat.js"></script>
+</body>
+
+</html>
